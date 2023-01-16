@@ -10,6 +10,14 @@ script:
   - docker run -e CI=true finc1984/react-test npm run test
 
 after_success:
-  docker build -t finc1984/multi-client ./client
-  docker build -t finc1984/multi-server ./server
-  docker build -t finc1984/multi-worker ./worker
+  - docker build -t finc1984/multi-client ./client
+  - docker build -t finc1984/multi-nginx ./nginx
+  - docker build -t finc1984/multi-server ./server
+  - docker build -t finc1984/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push finc1984/multi-client
+  - docker push finc1984/multi-nginx
+  - docker push finc1984/multi-server
+  - docker push finc1984/multi-worker
